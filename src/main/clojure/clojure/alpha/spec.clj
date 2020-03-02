@@ -424,7 +424,7 @@
   "Given a function symbol, set of constants, or anonymous function,
   returns a spec object."
   [s]
-  `(resolve-spec '~(explicate (ns-name *ns*) s)))
+  `(resolve-spec '~(explicate (ns-name *ns*) `(spec ~s))))
 
 (defn register
   "Given a namespace-qualified keyword or resolvable symbol k, and a

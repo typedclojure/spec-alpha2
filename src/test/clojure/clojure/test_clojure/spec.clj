@@ -309,7 +309,11 @@
     (is (= (s/describe sp) (s/form sp) #{1 2})))
 
   (is (= (s/describe (s/spec odd?)) 'odd?))
+  (is (= (s/describe (s/resolve-spec `(s/spec odd?))) 'odd?))
   (is (= (s/form (s/spec odd?)) 'clojure.core/odd?))
+
+  (is (= (s/form (s/spec (s/* integer?))) `(s/spec (s/* integer?))))
+  (is (= (s/form (s/resolve-spec `(s/spec (s/* integer?)))) `(s/spec (s/* integer?))))
 
   (is (= (s/describe (s/spec #(odd? %))) '(odd? %)))
   (is (= (s/form (s/spec #(odd? %))) '(fn [%] (clojure.core/odd? %)))))

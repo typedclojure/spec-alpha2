@@ -521,6 +521,18 @@
   [{:keys [schemas]}]
   (union-impl schemas nil))
 
+(defmethod s/expand-spec `s/spec
+  [[_ s :as form]]
+  {:clojure.spec/op `s/spec
+   :s s
+   :form form})
+
+(defmethod s/create-spec `s/spec
+  [{:keys [s form]}]
+  (let [rs (s/resolve-spec s)]
+    (cond-> rs
+      (::s/op rs) (assoc ::s/wrap-spec form))))
+
 (defn- select-impl
   [schema-form selection gfn]
   (let [id (java.util.UUID/randomUUID)
@@ -1439,20 +1451,24 @@
                     (when (accept-nil? p1) (deriv (rep* p2 p2 (add-ret p1 ret nil) splice forms) x)))))))
 
 (defn- op-describe [p]
-  (let [{:keys [::s/op ps ks forms splice p1 rep+ maybe amp] :as p} (#'s/reg-resolve! p)]
+  (let [{:keys [::s/op ps ks forms splice p1 rep+ maybe amp ::s/wrap-spec] :as p} (#'s/reg-resolve! p)]
     ;;(prn {:op op :ks ks :forms forms :p p})
     (when p
-      (case op
-        ::s/accept nil
-        nil p
-        ::s/amp (list* 'clojure.alpha.spec/& (resolve-form amp) (resolve-forms forms))
-        ::s/pcat (if rep+
-                 (list `s/+ rep+)
-                 (cons `s/cat (mapcat vector (or (seq ks) (repeat :_)) (resolve-forms forms))))
-        ::s/alt (if maybe
-                (list `s/? maybe)
-                (cons `s/alt (mapcat vector ks (resolve-forms forms))))
-        ::s/rep (list (if splice `s/+ `s/*) (resolve-form forms))))))
+      (let [d (case op
+                ::s/accept nil
+                nil p
+                ::s/amp (list* 'clojure.alpha.spec/& (resolve-form amp) (resolve-forms forms))
+                ::s/pcat (if rep+
+                           (list `s/+ rep+)
+                           (cons `s/cat (mapcat vector (or (seq ks) (repeat :_)) (resolve-forms forms))))
+                ::s/alt (if maybe
+                          (list `s/? maybe)
+                          (cons `s/alt (mapcat vector ks (resolve-forms forms))))
+                ::s/rep (list (if splice `s/+ `s/*) (resolve-form forms)))]
+        (if wrap-spec
+          (-> (list (first wrap-spec) d)
+              (with-meta (meta wrap-spec)))
+          d)))))
 
 (defn- op-explain [form p path via in input settings-key settings]
   ;;(prn {:form form :p p :path path :input input})

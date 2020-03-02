@@ -1144,10 +1144,11 @@
        (describe* [_] describe-form)))))
 
 (defmethod s/expand-spec `s/every
-  [[_ pred & opts]]
+  [[_ pred & opts :as form]]
   {:clojure.spec/op `s/every
    :spec pred
-   :opts (apply hash-map opts)})
+   :opts (-> (apply hash-map opts)
+             (update ::s/describe #(or % form)))})
 
 (defmethod s/create-spec `s/every
   [{:keys [spec opts]}]

@@ -351,6 +351,9 @@
     (s/every int?)
     '(clojure.alpha.spec/every clojure.core/int?)
 
+    (s/resolve-spec `(s/every int?))
+    '(clojure.alpha.spec/every clojure.core/int?)
+
     (s/coll-of (s/tuple (s/tuple int?)))
     '(clojure.alpha.spec/coll-of (clojure.alpha.spec/tuple (clojure.alpha.spec/tuple clojure.core/int?)))
 

@@ -3,14 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.clojars.typedclojure-clojars</groupId>
   <artifactId>alpha.spec</artifactId>
-  <version>0.2.177-frenchy64-1-SNAPSHOT</version>
+  <version>0.2.177-frenchy64-1</version>
   <name>alpha.spec</name>
   <description>Specification of data and functions</description>
 
   <scm>
     <connection>scm:git:git://github.com/clojure/spec-alpha2.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/clojure/spec-alpha2.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>0.2.177-frenchy64-1</tag>
     <url>https://github.com/clojure/spec-alpha2</url>
   </scm>
 

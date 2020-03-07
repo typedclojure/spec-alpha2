@@ -1,0 +1,30 @@
+name: Test and deploy
+
+on: [push]
+
+jobs:
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - uses: DeLaGuardo/setup-clojure@2.0
+        with:
+          tools-deps: latest
+      - name: Configure settings.xml
+        run: |
+          mkdir -p ~/.m2
+          echo "<settings><servers><server><id>clojars</id><username>typedclojure-clojars</username><password>${{ secrets.ClojarsPassword }}</password></server></servers></settings>" > ~/.m2/settings.xml
+
+      - name: Deploy
+        run: ./script/deploy-actions.sh

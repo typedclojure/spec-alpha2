@@ -22,6 +22,19 @@
     </license>
   </licenses>
 
+  <distributionManagement>
+    <snapshotRepository>
+      <id>clojars</id>
+      <name>Clojars repository</name>
+      <url>https://clojars.org/repo</url>
+    </snapshotRepository>
+    <repository>
+      <id>clojars</id>
+      <name>Clojars repository</name>
+      <url>https://clojars.org/repo</url>
+    </repository>
+  </distributionManagement>
+
   <parent>
     <groupId>org.clojure</groupId>
     <artifactId>pom.contrib</artifactId>

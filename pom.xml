@@ -3,7 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.clojars.typedclojure-clojars</groupId>
   <artifactId>alpha.spec</artifactId>
+<<<<<<< HEAD
   <version>0.2.177-typedclojure-1-SNAPSHOT</version>
+=======
+  <version>0.2.177-frenchy64-2-SNAPSHOT</version>
+>>>>>>> 7c9f7a5a8b168f84ef40cc8023e820db2a270b1b
   <name>alpha.spec</name>
   <description>Specification of data and functions</description>
 

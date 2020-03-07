@@ -35,11 +35,13 @@
     </repository>
   </distributionManagement>
 
+  <!--
   <parent>
     <groupId>org.clojure</groupId>
     <artifactId>pom.contrib</artifactId>
     <version>0.3.0</version>
   </parent>
+  -->
 
   <developers>
     <developer>
@@ -51,6 +53,13 @@
 
   <properties>
     <clojure.version>1.10.0</clojure.version>
+    <!-- By default, do not enable *warn-on-reflection*, may be
+         overridden in projects at the command line. -->
+    <clojure.warnOnReflection>false</clojure.warnOnReflection>
+
+    <clojure.source.dir>src/main/clojure</clojure.source.dir>
+    <clojure.testSource.dir>src/test/clojure</clojure.testSource.dir>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <dependencies>
@@ -119,6 +128,75 @@
           <testSourceDirectories>
             <testSourceDirectory>src/test/clojure</testSourceDirectory>
           </testSourceDirectories>
+        </configuration>
+      </plugin>
+
+      <!-- build.pom extras, copied from TC needed to avoid sonatype and delete parent pom -->
+      <plugin>
+        <!-- Add Clojure sources to the project's source directories -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>add-clojure-source-dirs</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+              <goal>add-resource</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${clojure.source.dir}</source>
+              </sources>
+              <resources>
+                <resource>
+                  <directory>${clojure.source.dir}</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-clojure-test-source-dirs</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+              <goal>add-test-resource</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${clojure.testSource.dir}</source>
+              </sources>
+              <resources>
+                <resource>
+                  <directory>${clojure.testSource.dir}</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- Clojure targets Java 1.8+ -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+          <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.3</version>
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <tagNameFormat>@{project.version}</tagNameFormat>
+          <!-- allow local cleanup if deploy fails -->
+          <pushChanges>false</pushChanges>
+          <localCheckout>true</localCheckout>
         </configuration>
       </plugin>
     </plugins>

@@ -10,8 +10,8 @@ if [[ "$GITHUB_ACTIONS" != 'true' ]]; then
   exit 1
 fi 
 
-if [[ "$GITHUB_REPOSITORY" != 'frenchy64/spec-alpha2' ]]; then
-  echo "This script only deploys in frenchy64/spec-alpha2, not $GITHUB_REPOSITORY. Doing nothing."
+if [[ "$GITHUB_REPOSITORY" != 'typedclojure/spec-alpha2' ]]; then
+  echo "This script only deploys in typedclojure/spec-alpha2, not $GITHUB_REPOSITORY. Doing nothing."
   exit 0
 fi
 

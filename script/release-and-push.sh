@@ -15,28 +15,35 @@
 
 set -e
 
+DEPLOY_BRANCH="typedclojure"
+DEPLOY_REPO="typedclojure/spec-alpha2"
+ALLOWED_ACTOR="frenchy64"
+USER_EMAIL="abonnairesergeant@gmail.com"
+USER_NAME="Ambrose Bonnaire-Sergeant"
+
+
 if [[ "$GITHUB_ACTIONS" != 'true' ]]; then
   echo "Must release on GitHub Actions only."
   exit 1
 fi
 
-if [[ `git symbolic-ref --short HEAD` != 'frenchy64-dev' ]]; then
+if [[ `git symbolic-ref --short HEAD` != "$DEPLOY_BRANCH" ]]; then
   echo "Releases only triggered on the master branch. Doing nothing."
   exit 0
 fi
 
-if [[ "$GITHUB_ACTOR" != "frenchy64" ]]; then
+if [[ "$GITHUB_ACTOR" != "$ALLOWED_ACTOR" ]]; then
   echo "Only maintainers may deploy a release. Doing nothing."
   exit 0
 fi
 
-if [[ "$GITHUB_REPOSITORY" != "frenchy64/spec-alpha2" ]]; then
-  echo "Releases only allowed from frenchy64/spec-alpha2. Doing nothing."
+if [[ "$GITHUB_REPOSITORY" != "$DEPLOY_REPO" ]]; then
+  echo "Releases only allowed from $DEPLOY_REPO. Doing nothing."
   exit 0
 fi
 
-git config --local user.email "abonnairesergeant@gmail.com"
-git config --local user.name "Ambrose Bonnaire-Sergeant"
+git config --local user.email "$USER_EMAIL"
+git config --local user.name "$USER_NAME"
 
 RELEASE_VERSION=$1
 DEVELOPMENT_VERSION=$2
@@ -63,12 +70,12 @@ mvn release:prepare release:perform \
   -DdevelopmentVersion="$DEVELOPMENT_VERSION"
   )
 
-( set -x;
-./script/bump-readme-version "$RELEASE_VERSION"
-)
+#( set -x;
+#./script/bump-readme-version "$RELEASE_VERSION"
+#)
 
-git add .
-git commit -m "Bump README versions for $RELEASE_VERSION"
+#git add .
+#git commit -m "Bump README versions for $RELEASE_VERSION"
 
 # DON'T PRINT HERE
-git push "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" master --tags
+git push "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${DEPLOY_BRANCH}" --tags

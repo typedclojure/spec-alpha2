@@ -1195,7 +1195,7 @@
   (s/create-spec
     {:clojure.spec/op `s/every
      :spec `(s/tuple ~kspec ~vspec)
-     :opts (merge opts {::s/kfn (fn [i# v#] (nth v# 0))
+     :opts (merge opts {::s/kfn `(fn [i# v#] (nth v# 0))
                         :into {}
                         ::s/describe `(s/every-kv ~(resolve-form kspec) ~(resolve-form vspec) ~@(mapcat identity opts))})}))
 
@@ -1225,7 +1225,7 @@
   (s/create-spec
     {:clojure.spec/op `s/every
      :spec `(s/tuple ~kspec ~vspec)
-     :opts (merge opts {::s/kfn (fn [i# v#] (nth v# 0))
+     :opts (merge opts {::s/kfn `(fn [i# v#] (nth v# 0))
                         :into {}
                         ::s/conform-all true
                         :kind `map?
